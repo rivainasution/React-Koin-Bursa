@@ -1,5 +1,3 @@
-import { useState } from "react"
-
 export default function NameFormat(trx, id, setName, setPages){
     function clickHandle(){
         setName(id);

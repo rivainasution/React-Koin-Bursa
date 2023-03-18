@@ -13,29 +13,45 @@ import {
     ProgressBar, 
     Row 
 } from "react-bootstrap";
-import { NumberBehindComma } from "../../../../Logic";
+import { NumberBehindComma, RatesFormat } from "../../../../Logic";
 
 const total = 819821192108;
 
 //TODO: Start Function
-export default function Cards (prop){
-    const data = prop.data;
-    const cards = ['Market Cap', 'Dominance', 'Supply', 'Volume 24H'];
+export default function Cards ({data, currencySymbol, rates, symbol}){
+    const cards = [
+        {
+            id: 0,
+            menu: 'Market Cap'
+        },
+        {
+            id: 1,
+            menu: 'Dominance'
+        },
+        {
+            id: 2,
+            menu: 'Supply'
+        },
+        {
+            id: 3,
+            menu: 'Volume 24H'
+        }
+    ];
 
     //TODO: Function to looping cards
     const cardHandle = () => {
         return cards.map((item) => {
             return (
-                <Col className="my-2">
-                    <div class="shadow p-3 bg-light text-dark rounded cards">
+                <Col className="my-2" key={item.id}>
+                    <div className="shadow p-3 bg-light text-dark rounded cards">
                         <div className="d-flex flex-column flex-lg-row align-items-center">
                             <Col md={8} className='my-2'>
-                                <h4>{item}</h4>
-                                <h6 className="text-secondary">{cardNumber(item)} {cardSymbol(item)}</h6>
-                                {cardProgress(item)}
+                                <h4>{item.menu}</h4>
+                                <h6 className="text-secondary">{cardNumber(item.menu)} {cardSymbol(item.menu)}</h6>
+                                {cardProgress(item.menu)}
                             </Col>
                             <div className="col-4 d-flex align-items-center justify-content-end">
-                                {cardIcon(item)}
+                                {cardIcon(item.menu)}
                             </div>
                         </div>
                     </div>
@@ -46,25 +62,25 @@ export default function Cards (prop){
     //TODO: Function to config cards number
     const cardNumber = (item) => {
         if (item === 'Market Cap'){
-            return NumberBehindComma(data.marketCapUsd,0);
+            return RatesFormat(NumberBehindComma(data.marketCapUsd,0), symbol, rates, currencySymbol);
         } else if (item === 'Dominance'){
-            return NumberBehindComma(((data.marketCapUsd/total)*100),5);
+            return NumberBehindComma(((data.marketCapUsd/total)*100),2);
         } else if (item === 'Supply'){
             return NumberBehindComma(data.supply,0);
         } else if (item === 'Volume 24H'){
-            return NumberBehindComma(data.volumeUsd24Hr,0);
+            return RatesFormat(NumberBehindComma(data.volumeUsd24Hr,0), symbol, rates, currencySymbol);
         }
     }
     //TODO: Function to config cards symbol
     const cardSymbol = (item) => {
         if (item === 'Market Cap'){
-            return "$";
+            return "";
         } else if (item === 'Dominance'){
             return "%";
         } else if (item === 'Supply'){
             return data.symbol;
         } else if (item === 'Volume 24H'){
-            return "$";
+            return "";
         }
     }
     //TODO: Function to config cards icon

@@ -2,28 +2,10 @@
 import { 
     Badge 
 } from "react-bootstrap";
-import { NumberBehindComma } from "../../../../Logic";
+import { IsPriceDown, NumberBehindComma, RatesFormat } from "../../../../Logic";
 
 //TODO: Start Function
-export default function Price ({data, setColor}){
-    //TODO: is price down
-    const isPriceDown = (number) => {
-        setColor(number);
-        if (number < 0) {
-            return (
-                <Badge bg='danger'>
-                    {NumberBehindComma(number,2)}
-                </Badge>
-            );
-        } else {
-            return (
-                <Badge bg='success'>
-                    +{NumberBehindComma(number, 2)}
-                </Badge>
-            );
-        }
-    }
-
+export default function Price ({data, currencySymbol, rates, symbol}){
     return (
         //TODO: Show rank and price
         <div className="d-flex align-items-start justify-content-between flex-column flex-sm-row flex-md-row flex-lg-row flex-xl-row mb-3">
@@ -42,7 +24,7 @@ export default function Price ({data, setColor}){
                     {data.name} Price ({data.symbol})
                 </h6>
                 <h2>
-                    {NumberBehindComma(data.priceUsd, 5)} USD {isPriceDown(data.changePercent24Hr)}
+                    {RatesFormat(NumberBehindComma(data.priceUsd, 3), symbol, rates, currencySymbol)} {IsPriceDown(data.changePercent24Hr)}
                 </h2>
             </div>
         </div>

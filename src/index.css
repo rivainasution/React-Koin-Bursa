@@ -30,8 +30,18 @@ code {
   font-weight: bold;
 }
 
+.t-4{  
+  color: var(--dark-primary);
+  font-size: 1rem;
+}
+
 .t-hover:hover{
   color: var(--blue-primary);
+  cursor: pointer;
+}
+
+.m:hover{
+  background-color: var(--white-secondary);
   cursor: pointer;
 }
 

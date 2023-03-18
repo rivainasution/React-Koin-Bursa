@@ -16,7 +16,7 @@ ChartJS.register(
 )
 
 
-export default function Chart({time, prices, title, color}){
+export default function Chart({time, prices, title, data}){
     // Chart  data
     const chart = {
         labels: time,
@@ -26,13 +26,13 @@ export default function Chart({time, prices, title, color}){
                 data: prices,
                 fill: true,
                 backgroundColor: "rgba(6, 156,51, .3)",
-                borderColor: () => isPriceDown(color),
+                borderColor: () => isPriceDown(data),
             }
         ]
     };
 
-    const isPriceDown = (color) => {
-        if (color < 0){
+    const isPriceDown = (data) => {
+        if (data.changePercent24Hr < 0){
             return "#ff0000";
         } else {
             return "#02b844";

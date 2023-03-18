@@ -6,12 +6,13 @@ import {
     NameFormat,
     NumberBehindComma,
     PriceFormat, 
+    RatesFormat, 
     Supply
 } from './Logic';
 import { Dashboard, DetailCoin, Title } from './Pages';
 
 
-export default function Home(){
+export default function Home({currencySymbol, rates, symbol}){
     const [assets, setAssets] = useState([]);
     const [pages, setPages] = useState('Dashboard')
     const [name, setName] = useState('');
@@ -19,7 +20,7 @@ export default function Home(){
     const [detailTitle, setDetailTitle] = useState('');
 
     useEffect(() => {
-        axios.get("https://api.coincap.io/v2/assets")
+        axios.get("https://api.coincap.io/v2/assets?limit=2000")
           .then((response) => {
             setAssets(response.data.data);
           })
@@ -88,17 +89,17 @@ export default function Home(){
                 no: no+1,
                 name: NameFormat(trx.name, trx.id, setName, setPages),
                 symbol: trx.symbol,
-                priceusd: NumberBehindComma(trx.priceUsd,8),
+                priceusd: RatesFormat(NumberBehindComma(trx.priceUsd,3), symbol, rates, currencySymbol),
                 changePercent24hr: PriceFormat(NumberBehindComma(trx.changePercent24Hr,2)),
-                marketCapUsd: NumberBehindComma(trx.marketCapUsd, 2),
-                volumeUsd24Hr: NumberBehindComma(trx.volumeUsd24Hr, 2),
-                volume24Hr: NumberBehindComma(trx.vwap24Hr, 8),
+                marketCapUsd: RatesFormat(NumberBehindComma(trx.marketCapUsd, 3), symbol, rates, currencySymbol),
+                volumeUsd24Hr: RatesFormat(NumberBehindComma(trx.volumeUsd24Hr, 3), symbol, rates, currencySymbol),
+                volume24Hr: RatesFormat(NumberBehindComma(trx.vwap24Hr, 3), symbol, rates, currencySymbol),
                 supply: Supply(trx.supply, trx.maxSupply),
                 maxSupply: MaxSupply(NumberBehindComma(trx.maxSupply)),
           };
         });
         setRecords(mappedRecords); 
-      }, [assets]);
+      }, [assets, symbol, rates, currencySymbol]);
     
     function content(){
         if (pages === 'Dashboard'){
@@ -116,6 +117,9 @@ export default function Home(){
                     name={name}
                     setName={setDetailTitle}
                     title={detailTitle}
+                    currencySymbol={currencySymbol}
+                    rates={rates} 
+                    symbol={symbol}
                 />
             )
         }

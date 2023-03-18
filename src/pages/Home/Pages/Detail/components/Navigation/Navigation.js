@@ -11,33 +11,36 @@ import { History, Market, Overview } from "../../pages";
 import { Headers } from "./components";
 
 //TODO: Start function
-export default function SubNavbar ({name, color, title}){
+export default function SubNavbar ({name, data, title}){
     const [menu, setMenu] = useState('Overview');
     const [history, setHistory] = useState([]);
     const [market, setMarket] = useState([]);
     const [records, setRecords] = useState(market);
     const [dataHistory, setDataHistory] = useState(history);
+    const [interval, setInterval] = useState('m1')
+
     //TODO: FETCH API
 
     useEffect(() => {
-        axios.get(`https://api.coincap.io/v2/assets/${name}/history?interval=d1`)
+        axios.get(`https://api.coincap.io/v2/assets/${name}/history?interval=${interval}`)
           .then((response) => {
             setHistory(response.data.data);
           })
           .catch((error) => {
             console.log(error);
           });
-    }, []);
+    }, [name, interval]);
+
 
     useEffect(() => {
-        axios.get(`https://api.coincap.io/v2/assets/${name}/markets`)
+        axios.get(`https://api.coincap.io/v2/assets/${name}/markets?limit=2000`)
           .then((response) => {
             setMarket(response.data.data);
           })
           .catch((error) => {
             console.log(error);
           });
-    }, []);
+    }, [name]);
 
     const columns = [
         {
@@ -127,8 +130,10 @@ export default function SubNavbar ({name, color, title}){
             return (
                 <Overview 
                     title={title} 
-                    data={history} 
-                    color={color} 
+                    history={history} 
+                    data={data}
+                    setInterval={setInterval}
+                    interval={interval}
                 />
             );
         } else if (menu === 'Market'){
@@ -152,9 +157,12 @@ export default function SubNavbar ({name, color, title}){
 
     return (
         //ToDO: Show detail navbar
-        <div class="my-3 row">
+        <div className="my-3 row">
             <h1>{menu}</h1>
-            <Headers onClick={setMenu} />
+            <Headers 
+                navbar={menu}
+                setNavbar={setMenu} 
+            />
             {content()}
         </div>
     );

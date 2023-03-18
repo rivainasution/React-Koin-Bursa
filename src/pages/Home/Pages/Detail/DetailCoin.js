@@ -7,9 +7,8 @@ import {
     Price 
 } from "./components";
 
-export default function DetailCoin({name, setName, title}){
+export default function DetailCoin({name, setName, title, currencySymbol, rates, symbol}){
     const [data, setData] = useState({});
-    const [color, setColor] = useState('');
 
     useEffect(() => {
         axios.get(`https://api.coincap.io/v2/assets/${name}`)
@@ -20,17 +19,25 @@ export default function DetailCoin({name, setName, title}){
           .catch((error) => {
             console.log(error);
           });
-      }, [name]);
+      }, [name, setName]);
 
     return(
         <Container>
-            <Price data={data} setColor={setColor}/>
+            <Price 
+                data={data} 
+                currencySymbol={currencySymbol} 
+                rates={rates} 
+                symbol={symbol}
+            />
             <Cards 
                 data={data}
+                currencySymbol={currencySymbol} 
+                rates={rates} 
+                symbol={symbol}
             />
             <Navigation 
                 name={name} 
-                color={color} 
+                data={data} 
                 title={title} 
             />
         </Container>

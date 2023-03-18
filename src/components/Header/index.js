@@ -1,6 +1,6 @@
 import { faPieChart, faStar } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Button, Image, Nav } from "react-bootstrap";
+import { Image, Nav } from "react-bootstrap";
 import logo from '../../assets/logo.png';
 
 export default function Navigation(){

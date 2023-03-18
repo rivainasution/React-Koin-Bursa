@@ -8,3 +8,5 @@ export { default as isTooltips } from './IsTooltip/Tooltip.js';
 export { default as PairsFormat } from './PairsFormat/PairsFormat.js';
 export { default as TimeHandle } from './TimeFormat/TimeFormat.js';
 export { default as DateHandle } from './DateFormat/DateFormat.js';
+export { default as RatesFormat } from './RatesFormat/RatesFormat.js';
+export { default as IsPriceDown } from './IsPriceDown/IsPriceDown.js';

@@ -2,9 +2,7 @@
 import DataTable from 'react-data-table-component';
 import { 
     Container, 
-    Table 
 } from "react-bootstrap";
-import { NumberBehindComma } from "../../../../Logic";
 
 //TODO:Start function
 export default function History({title, columns, records}){
