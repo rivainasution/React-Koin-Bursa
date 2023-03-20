@@ -1,3 +1,5 @@
+import { faBarChart, faBars, faLineChart } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import { Container, Nav } from "react-bootstrap";
 import { Charts, ComingSoon } from "./pages";
@@ -26,15 +28,18 @@ export default function Overview({title, history, data, setInterval, interval}){
     const navigation = [
         {
           id: 0,
-          menu: "Price" 
+          menu: "Price",
+          icon: faBars
         },
         {
           id: 1,
-          menu: "Coming Soon 1" 
+          menu:'Line',
+          icon: faBarChart 
         },
         {
           id: 2,
-          menu: "Coming Soon 2"
+          menu: "Chart",
+          icon: faLineChart
         }
     ];
 
@@ -89,7 +94,7 @@ export default function Overview({title, history, data, setInterval, interval}){
     const content = () => {
         if (navbar === 'Price'){
             return <Charts time={time} prices={prices} title={title} data={data} />
-        } else if (navbar === 'Coming Soon 1' || navbar === 'Coming Soon 2'){
+        } else if (navbar === 'Line' || navbar === 'Chart'){
             return <ComingSoon />
         }
     } 
@@ -103,7 +108,10 @@ export default function Overview({title, history, data, setInterval, interval}){
             }`}
             onClick={() => handleNavigationClick(item.menu)}
           >
-            {item.menu}
+            {item.menu === 'Price' ?
+              <span>{item.menu}</span>:
+              <FontAwesomeIcon icon={item.icon} />
+            }            
           </Nav.Link>
         ));
       };

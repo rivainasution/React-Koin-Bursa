@@ -9,13 +9,14 @@ import {
     RatesFormat, 
     Supply
 } from './Logic';
-import { Dashboard, DetailCoin, Title } from './Pages';
+import { Dashboard, DetailCoin, Markets, Title } from './Pages';
 
 
 export default function Home({currencySymbol, rates, symbol}){
     const [assets, setAssets] = useState([]);
     const [pages, setPages] = useState('Dashboard')
     const [name, setName] = useState('');
+    const [pageId, setPageId] = useState('');
     const [detailTitle, setDetailTitle] = useState('');
     const [filter, setFilter] = useState([]);
 
@@ -102,6 +103,17 @@ export default function Home({currencySymbol, rates, symbol}){
                     currencySymbol={currencySymbol}
                     rates={rates} 
                     symbol={symbol}
+                    setPage={setPages}
+                    setPageId={setPageId}
+                />
+            )
+        } else if (pages === 'Market'){
+            return (
+                <Markets 
+                    currencySymbol={currencySymbol} 
+                    rates={rates} 
+                    symbol={symbol}
+                    pageId={pageId}
                 />
             )
         }
@@ -110,7 +122,7 @@ export default function Home({currencySymbol, rates, symbol}){
         <Container className='my-3 bg-white p-3 border'>
             <Title 
                 title={pages}
-                name={detailTitle} 
+                name={pages === 'Detail' ? detailTitle: pageId} 
                 route={setPages}
             />
             {content()}

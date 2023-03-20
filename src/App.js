@@ -36,9 +36,9 @@ export default function App() {
       <Routes>
         <Route
           path="/"
-          element={<Home currencySymbol={currencySymbol} rates={rates} symbol={symbol} />}
+          element={<Home currencySymbol={currencySymbol} rates={rates} symbol={symbol}/>}
         />
-        <Route path="/market" element={<Market />} />
+        <Route path="/market" element={<Market currencySymbol={currencySymbol} rates={rates} symbol={symbol}/>} />
       </Routes>
       <Footers />
     </Router>

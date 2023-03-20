@@ -7,7 +7,7 @@ import {
     Price 
 } from "./components";
 
-export default function DetailCoin({name, setName, title, currencySymbol, rates, symbol}){
+export default function DetailCoin({name, setName, title, currencySymbol, rates, symbol, setPage, setPageId}){
     const [data, setData] = useState({});
 
     useEffect(() => {
@@ -39,6 +39,11 @@ export default function DetailCoin({name, setName, title, currencySymbol, rates,
                 name={name} 
                 data={data} 
                 title={title} 
+                currencySymbol={currencySymbol} 
+                rates={rates} 
+                symbol={symbol} 
+                setPage={setPage}
+                setPageId={setPageId}
             />
         </Container>
     );

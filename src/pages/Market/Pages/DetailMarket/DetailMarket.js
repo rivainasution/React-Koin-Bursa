@@ -1,28 +1,25 @@
-//TODO: Import libraries or directories
+import { Container } from "react-bootstrap";
 import DataTable from 'react-data-table-component';
-import { 
-    Container, 
-} from "react-bootstrap";
 
-//TODO: Start function
-export default function Market({title, columns, market, filter, setFilter}){
+export default function DetailMarket({columns, market, filter, setFilter}){
     function handleFilter(event){
         const newData = market.filter(item=>{
-            const { exchangeId, quoteSymbol} = item;
+            const { exchangeId, baseSymbol, baseId, quoteSymbol, quoteId} = item;
 
             return (
                 exchangeId.toLowerCase().includes(event.target.value.toLowerCase()) ||
-                quoteSymbol.toLowerCase().includes(event.target.value.toLowerCase()) 
+                baseSymbol.toLowerCase().includes(event.target.value.toLowerCase()) ||
+                baseId.toLowerCase().includes(event.target.value.toLowerCase()) ||
+                quoteSymbol.toLowerCase().includes(event.target.value.toLowerCase()) ||
+                quoteId.toLowerCase().includes(event.target.value.toLowerCase())
             );
         })
         setFilter(newData);
     }
     return (
-        //TODO: Show table market
         <Container>
-            <h4 className="mt-3">Market {title}</h4>
             <div  className='d-flex justify-content-between my-2'>
-                <span className='fw-bold'>Anda bisa jual - beli coin {title} favoritmu di market berikut</span>
+                <span className='fw-bold'>Top 100 Market List</span>
                 <input type='text' onChange={handleFilter}/>
             </div>
             <DataTable

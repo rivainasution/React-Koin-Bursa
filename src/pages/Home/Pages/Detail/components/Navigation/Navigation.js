@@ -5,17 +5,19 @@ import {
     DateHandle, 
     NumberBehindComma, 
     PairsFormat, 
+    RatesFormat,
+    PriceFormat,
     TimeHandle 
 } from "../../../../Logic";
 import { History, Market, Overview } from "../../pages";
 import { Headers } from "./components";
+import { NameFormat } from "./logic";
 
 //TODO: Start function
-export default function SubNavbar ({name, data, title}){
+export default function SubNavbar ({name, data, title, currencySymbol, rates, symbol, setPage, setPageId}){
     const [menu, setMenu] = useState('Overview');
     const [history, setHistory] = useState([]);
     const [market, setMarket] = useState([]);
-    const [dataHistory, setDataHistory] = useState(history);
     const [interval, setInterval] = useState('m1');
     const [filter, setFilter] = useState([]);
 
@@ -24,7 +26,8 @@ export default function SubNavbar ({name, data, title}){
     useEffect(() => {
         axios.get(`https://api.coincap.io/v2/assets/${name}/history?interval=${interval}`)
           .then((response) => {
-            setHistory(response.data.data);
+            const dataWithNo = response.data.data.map((item, index) => ({ ...item, no: index + 1 }));
+            setHistory(dataWithNo);
           })
           .catch((error) => {
             console.log(error);
@@ -51,7 +54,7 @@ export default function SubNavbar ({name, data, title}){
         },
         {
             name: 'Exchange',
-            selector: row => row.exchangeId,
+            selector: row => NameFormat(row.exchangeId, setPageId, setPage),
             sortable: true,
         },
         {
@@ -61,17 +64,17 @@ export default function SubNavbar ({name, data, title}){
         },
         {
             name: 'Price',
-            selector: row => NumberBehindComma(row.priceUsd,8),
+            selector: row => RatesFormat(NumberBehindComma(row.priceUsd,3), symbol, rates, currencySymbol),
             sortable: true,
         },
         {
             name: 'Volume 24Hr',
-            selector: row => NumberBehindComma(row.volumeUsd24Hr,2),
+            selector: row => RatesFormat(NumberBehindComma(row.volumeUsd24Hr,2), symbol, rates, currencySymbol),
             sortable: true,
         },
         {
             name: 'Volume %',
-            selector: row => NumberBehindComma(row.volumePercent, 2),
+            selector: row => PriceFormat(NumberBehindComma(row.volumePercent, 2)),
             sortable: true,
         }
     ];
@@ -84,32 +87,20 @@ export default function SubNavbar ({name, data, title}){
         },
         {
             name: 'Price',
-            selector: row => row.priceUsd,
+            selector: row => RatesFormat(NumberBehindComma(row.priceUsd,3), symbol, rates, currencySymbol),
             sortable: true,
         },
         {
             name: 'Time',
-            selector: row => row.time,
+            selector: row => TimeHandle(row.time),
             sortable: true,
         },
         {
             name: 'Date',
-            selector: row => row.date,
+            selector: row => DateHandle(row.date),
             sortable: true,
         }
     ];
-
-    useEffect(() => {
-        const mappedRecords = history.map((trx,no) => {
-          return {
-                no: no+1,
-                priceUsd: NumberBehindComma(trx.priceUsd, 8),
-                time: TimeHandle(trx.time),
-                date: DateHandle(trx.date),
-          };
-        });
-        setDataHistory(mappedRecords); 
-    }, [history]);
 
     //TODO: Content selection
     const content = () => {
@@ -138,10 +129,10 @@ export default function SubNavbar ({name, data, title}){
                 <History 
                     title={title} 
                     columns={columnHistory} 
-                    records={dataHistory} 
+                    records={history} 
                 />
             );
-        }
+        } 
     }
 
     return (
