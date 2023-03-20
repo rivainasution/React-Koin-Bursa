@@ -16,18 +16,19 @@ export default function Home({currencySymbol, rates, symbol}){
     const [assets, setAssets] = useState([]);
     const [pages, setPages] = useState('Dashboard')
     const [name, setName] = useState('');
-    const [records, setRecords] = useState(assets);
     const [detailTitle, setDetailTitle] = useState('');
+    const [filter, setFilter] = useState([]);
 
     useEffect(() => {
         axios.get("https://api.coincap.io/v2/assets?limit=2000")
-          .then((response) => {
-            setAssets(response.data.data);
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      }, []);
+            .then((response) => {
+                const dataWithNo = response.data.data.map((item, index) => ({ ...item, no: index + 1 }));
+                setAssets(dataWithNo);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }, [filter]);
 
     const columns = [
         {
@@ -37,78 +38,59 @@ export default function Home({currencySymbol, rates, symbol}){
         },
         {
             name: 'Name',
-            selector: row => row.name,
+            selector: row => NameFormat(row.name, row.id, setName, setPages),
             sortable: true,
         },
         {
             name: 'Symbol',
-            selector: row => row.symbol,
+            selector: row => NameFormat(row.symbol, row.id, setName, setPages),
             sortable: true,
         },
         {
             name: 'Price Usd',
-            selector: row => row.priceusd,
+            selector: row => RatesFormat(NumberBehindComma(row.priceUsd,3), symbol, rates, currencySymbol),
             sortable: true,
         },
         {
             name: 'Change Percent 24 Hr',
-            selector: row => row.changePercent24hr,
+            selector: row => PriceFormat(NumberBehindComma(row.changePercent24Hr,2)),
             sortable: true,
         },
         {
             name: 'Market Cap Usd',
-            selector: row => row.marketCapUsd,
+            selector: row => RatesFormat(NumberBehindComma(row.marketCapUsd, 3), symbol, rates, currencySymbol),
             sortable: true,
         },
         {
             name: 'Volume Usd 24 Hr',
-            selector: row => row.volumeUsd24Hr,
+            selector: row => RatesFormat(NumberBehindComma(row.volumeUsd24Hr, 3), symbol, rates, currencySymbol),
             sortable: true,
         },
         {
             name: 'Price Average 24 Hr',
-            selector: row => row.volume24Hr,
+            selector: row => RatesFormat(NumberBehindComma(row.vwap24Hr, 3), symbol, rates, currencySymbol),
             sortable: true,
         },
         {
             name: 'Supply',
-            selector: row => row.supply,
+            selector: row => Supply(row.supply, row.maxSupply),
             sortable: true,
         },
         {
             name: 'Max Supply',
-            selector: row => row.maxSupply,
+            selector: row => MaxSupply(NumberBehindComma(row.maxSupply)),
             sortable: true,
         },
     ];
-    
-    
-    useEffect(() => {
-        const mappedRecords = assets.map((trx,no) => {
-          return {
-                no: no+1,
-                name: NameFormat(trx.name, trx.id, setName, setPages),
-                symbol: trx.symbol,
-                priceusd: RatesFormat(NumberBehindComma(trx.priceUsd,3), symbol, rates, currencySymbol),
-                changePercent24hr: PriceFormat(NumberBehindComma(trx.changePercent24Hr,2)),
-                marketCapUsd: RatesFormat(NumberBehindComma(trx.marketCapUsd, 3), symbol, rates, currencySymbol),
-                volumeUsd24Hr: RatesFormat(NumberBehindComma(trx.volumeUsd24Hr, 3), symbol, rates, currencySymbol),
-                volume24Hr: RatesFormat(NumberBehindComma(trx.vwap24Hr, 3), symbol, rates, currencySymbol),
-                supply: Supply(trx.supply, trx.maxSupply),
-                maxSupply: MaxSupply(NumberBehindComma(trx.maxSupply)),
-          };
-        });
-        setRecords(mappedRecords); 
-      }, [assets, symbol, rates, currencySymbol]);
     
     function content(){
         if (pages === 'Dashboard'){
             return (
                 <Dashboard 
                     columns={columns}
-                    records={records}
                     assets={assets}
-                    setRecords={setRecords}
+                    filter={filter}
+                    setFilter={setFilter}
                 />
             )
         } else if (pages === 'Detail'){

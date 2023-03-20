@@ -15,9 +15,9 @@ export default function SubNavbar ({name, data, title}){
     const [menu, setMenu] = useState('Overview');
     const [history, setHistory] = useState([]);
     const [market, setMarket] = useState([]);
-    const [records, setRecords] = useState(market);
     const [dataHistory, setDataHistory] = useState(history);
-    const [interval, setInterval] = useState('m1')
+    const [interval, setInterval] = useState('m1');
+    const [filter, setFilter] = useState([]);
 
     //TODO: FETCH API
 
@@ -35,12 +35,13 @@ export default function SubNavbar ({name, data, title}){
     useEffect(() => {
         axios.get(`https://api.coincap.io/v2/assets/${name}/markets?limit=2000`)
           .then((response) => {
-            setMarket(response.data.data);
+            const dataWithNo = response.data.data.map((item, index) => ({ ...item, no: index + 1 }));
+            setMarket(dataWithNo);
           })
           .catch((error) => {
             console.log(error);
           });
-    }, [name]);
+    }, [name, filter]);
 
     const columns = [
         {
@@ -55,22 +56,22 @@ export default function SubNavbar ({name, data, title}){
         },
         {
             name: 'Pairs',
-            selector: row => row.pairs,
+            selector: row => PairsFormat(row.baseSymbol, row.quoteSymbol),
             sortable: true,
         },
         {
             name: 'Price',
-            selector: row => row.priceUsd,
+            selector: row => NumberBehindComma(row.priceUsd,8),
             sortable: true,
         },
         {
             name: 'Volume 24Hr',
-            selector: row => row.volumeUsd24Hr,
+            selector: row => NumberBehindComma(row.volumeUsd24Hr,2),
             sortable: true,
         },
         {
             name: 'Volume %',
-            selector: row => row.volumePercent,
+            selector: row => NumberBehindComma(row.volumePercent, 2),
             sortable: true,
         }
     ];
@@ -97,20 +98,6 @@ export default function SubNavbar ({name, data, title}){
             sortable: true,
         }
     ];
-    
-    useEffect(() => {
-        const mappedRecords = market.map((trx,no) => {
-          return {
-                no: no+1,
-                exchangeId: trx.exchangeId,
-                pairs: PairsFormat(trx.baseSymbol, trx.quoteSymbol),
-                priceUsd: NumberBehindComma(trx.priceUsd,8),
-                volumeUsd24Hr: NumberBehindComma(trx.volumeUsd24Hr,2),
-                volumePercent: NumberBehindComma(trx.volumePercent, 2),
-          };
-        });
-        setRecords(mappedRecords); 
-      }, [market]);
 
     useEffect(() => {
         const mappedRecords = history.map((trx,no) => {
@@ -141,7 +128,9 @@ export default function SubNavbar ({name, data, title}){
                 <Market 
                     title={title} 
                     columns={columns} 
-                    records={records}
+                    market={market}
+                    filter={filter}
+                    setFilter={setFilter}
                 />
             );
         } else if (menu === 'History'){

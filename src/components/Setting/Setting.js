@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Container, Form, Modal } from "react-bootstrap";
 import { Modals } from "./pages";
 
-export default function Setting({currencySymbol, setCurrencySymbol, setRates, setSymbol}){
+export default function Setting({currencySymbol, setCurrencySymbol, setRates, rates, setSymbol}){
     const [lgShow, setLgShow] = useState(false);
 
     return(
@@ -40,6 +40,7 @@ export default function Setting({currencySymbol, setCurrencySymbol, setRates, se
                         currencySymbol={currencySymbol}
                         setCurrencySymbol={setCurrencySymbol}
                         setRates={setRates}
+                        rates={rates}
                         setLgShow={setLgShow}
                         setSymbol={setSymbol}
                     />

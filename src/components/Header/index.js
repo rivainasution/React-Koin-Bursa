@@ -3,7 +3,71 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Image, Nav } from "react-bootstrap";
 import logo from '../../assets/logo.png';
 
-export default function Navigation(){
+export default function Navigation({setPage, page}){
+
+    const menu = [
+        {
+            id:0,
+            value: 'Home',
+            href: '/'
+        }, 
+        {
+            id: 1, 
+            value: 'Market',
+            href:'/market'
+        }
+    ]
+
+    const navbar = [
+        {
+            id: 0,
+            value: 'Watchlist',
+            href: '/watchlist',
+            icon: faStar
+        },
+        {
+            id: 1,
+            value: 'Portfolio',
+            href: '/portfolio',
+            icon: faPieChart
+        }
+    ]
+
+    const clikHandle = (menu) => {
+        setPage(menu)
+    }
+
+    const menuHandle = () => {
+        return menu.map(item=>(
+            <Nav.Link 
+                href={item.href} 
+                className={`t-3 t-hover ${page === item.value ? "bg-primary text-light" : ""}`}
+                key={item.id}
+                onClick={()=>clikHandle(item.value)}
+            >
+                {item.value}
+            </Nav.Link>
+        ))
+    }
+
+    const navbarHandle = () => {
+        return navbar.map(item => (
+            <Nav.Link 
+                href={item.href}
+                className={`t-3 t-hover ${page === item.value ? "bg-primary text-light" : ""}`}
+                key={item.id}
+                onClick={()=>clikHandle(item.value)}
+            >
+                <div 
+                    className='d-flex align-items-center justify-content-center'
+                >
+                    <FontAwesomeIcon icon={item.icon} className='mx-1'/>
+                    <span className="mx-1">{item.value}</span>
+                </div>
+            </Nav.Link>
+        ))
+    }
+
     return(
         <div className="
                 d-flex 
@@ -43,19 +107,9 @@ export default function Navigation(){
                     col-sm-5
                     d-flex flex-row 
                     align-items-center justify-content-start
-                '>
-                    <Nav.Link 
-                        href="/" 
-                        className='t-3 t-hover'
-                    >
-                        Home
-                    </Nav.Link>
-                    <Nav.Link 
-                        href="/market" 
-                        className="t-3 t-hover"
-                    >
-                        Market
-                    </Nav.Link>
+                    '
+                >
+                    {menuHandle()}
                     
                 </Nav>
                 <Nav className='
@@ -64,28 +118,11 @@ export default function Navigation(){
                     col-sm-7
                     d-flex flex-row 
                     align-items-center justify-content-end
-                '>
-                    <Nav.Link 
-                        href="/" 
-                        className='t-3 t-hover'
-                    >
-                        <div className='d-flex align-items-center justify-content-center'>
-                            <FontAwesomeIcon icon={faStar} className='mx-1'/>
-                            <span className="mx-1">Watchlist</span>
-                        </div>
-                    </Nav.Link>
-                    <Nav.Link 
-                        href="/market" 
-                        className="t-3 t-hover"
-                    >
-                        <div className='d-flex align-items-center justify-content-center'>
-                            <FontAwesomeIcon icon={faPieChart} className='mx-1'/>
-                            <span className="mx-1">Portfolio</span>
-                        </div>
-                    </Nav.Link>
+                    '
+                >
+                    {navbarHandle()}
                 </Nav>
             </div>
-            
         </div>
     );
 }

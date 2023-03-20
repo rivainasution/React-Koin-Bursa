@@ -1,17 +1,17 @@
 import { Container } from "react-bootstrap";
 import DataTable from 'react-data-table-component';
 
-export default function Dashboard({columns, records, assets, setRecords}){
+export default function Dashboard({columns, assets, filter, setFilter}){
     function handleFilter(event){
-        const newData = assets.filter(assets=>{
-            const { name, symbol} = assets;
+        const newData = assets.filter(asset=>{
+            const { name, symbol} = asset;
 
             return (
                 name.toLowerCase().includes(event.target.value.toLowerCase()) ||
                 symbol.toLowerCase().includes(event.target.value.toLowerCase()) 
             );
         })
-        setRecords(newData);
+        setFilter(newData);
     }
     return (
         <Container>
@@ -21,7 +21,7 @@ export default function Dashboard({columns, records, assets, setRecords}){
             </div>
             <DataTable
                 columns={columns}
-                data={records}
+                data={filter.length === 0? assets: filter}
                 fixedHeader
                 fixedHeaderScrollHeight='420px'
                 pagination
