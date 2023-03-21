@@ -1,7 +1,22 @@
+import axios from "axios";
+import { useEffect, useState } from "react";
 import { Container } from "react-bootstrap";
 import DataTable from 'react-data-table-component';
+import { Cards, Prices } from "../../components";
 
-export default function DetailMarket({columns, market, filter, setFilter}){
+export default function DetailExchange({columns, market, filter, setFilter, pageId, currencySymbol, rates, symbol, url}){
+    const [dataDetail, setDataDetail] = useState({});
+    
+    useEffect(() => {
+        axios.get(`https://api.coincap.io/v2/exchanges/${pageId}`)
+            .then((response) => {
+                setDataDetail(response.data.data);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }, [filter, pageId]);
+    
     function handleFilter(event){
         const newData = market.filter(item=>{
             const { exchangeId, baseSymbol, baseId, quoteSymbol, quoteId} = item;
@@ -18,8 +33,19 @@ export default function DetailMarket({columns, market, filter, setFilter}){
     }
     return (
         <Container>
-            <div  className='d-flex justify-content-between my-2'>
-                <span className='fw-bold'>Top 100 Market List</span>
+            <Prices
+                data={dataDetail} 
+                url={url}
+            />
+            <Cards 
+                data={dataDetail}
+                currencySymbol={currencySymbol} 
+                rates={rates} 
+                symbol={symbol}
+                url={url}
+            />
+            <div className='d-flex align-items-center justify-content-between mt-5 mb-2'>
+                <span className='fw-bold p-2'>Market</span>
                 <input type='text' onChange={handleFilter}/>
             </div>
             <DataTable

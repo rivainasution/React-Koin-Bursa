@@ -13,8 +13,8 @@ export default function Navigation({setPage, page}){
         }, 
         {
             id: 1, 
-            value: 'Market',
-            href:'/market'
+            value: 'Exchange',
+            href:'/exchange'
         }
     ]
 

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { Footers, Headers, Setting } from "./components";
-import { Home, Market } from "./pages";
+import { Exchange, Home } from "./pages";
 
 export default function App() {
   const [rates, setRates] = useState(1);
@@ -38,7 +38,7 @@ export default function App() {
           path="/"
           element={<Home currencySymbol={currencySymbol} rates={rates} symbol={symbol}/>}
         />
-        <Route path="/market" element={<Market currencySymbol={currencySymbol} rates={rates} symbol={symbol}/>} />
+        <Route path="/exchange" element={<Exchange currencySymbol={currencySymbol} rates={rates} symbol={symbol}/>} />
       </Routes>
       <Footers />
     </Router>

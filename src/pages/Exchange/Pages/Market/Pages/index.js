@@ -1,0 +1,1 @@
+export { default as DetailExchange } from './DetailMarket/DetailMarket.js';

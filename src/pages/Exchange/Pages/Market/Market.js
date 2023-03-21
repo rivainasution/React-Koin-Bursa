@@ -1,16 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Container } from 'react-bootstrap';
 import axios from "axios";
-import { DetailMarket, Title } from './Pages';
-import { NumberBehindComma, PriceFormat, RatesFormat } from './Logic';
+import { DetailExchange } from './Pages'
+import { NumberBehindComma, PriceFormat, RatesFormat } from '../../Logic';
 
-export default function Market({currencySymbol, rates, symbol}){
+export default function Market({currencySymbol, rates, symbol, pageId, url}){
     const [market, setMarket] = useState([]);
     const [filter, setFilter] = useState('');
-    const [pages, setPages] = useState('Markets');
 
     useEffect(() => {
-        axios.get("https://api.coincap.io/v2/markets?limit=2000")
+        axios.get(`https://api.coincap.io/v2/markets?exchangeId=${pageId}&limit=2000`)
             .then((response) => {
                 const dataWithNo = response.data.data.map((item, index) => ({ ...item, no: index + 1 }));
                 setMarket(dataWithNo);
@@ -18,7 +16,7 @@ export default function Market({currencySymbol, rates, symbol}){
             .catch((error) => {
                 console.log(error);
             });
-    }, [filter]);
+    }, [filter, pageId]);
 
     const columns = [
         {
@@ -59,17 +57,16 @@ export default function Market({currencySymbol, rates, symbol}){
     ];
     
     return (
-        <Container className='my-3 bg-white p-3 border'>
-            <Title 
-                title={pages}
-                route={setPages}
-            />
-            <DetailMarket
-                    columns={columns}
-                    market={market}
-                    filter={filter}
-                    setFilter={setFilter}
-                />
-        </Container>
+        <DetailExchange
+            columns={columns}
+            market={market}
+            filter={filter}
+            setFilter={setFilter}
+            pageId={pageId}
+            currencySymbol={currencySymbol}
+            rates={rates} 
+            symbol={symbol}
+            url={url}
+        />
     );
 }

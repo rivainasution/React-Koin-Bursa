@@ -51,6 +51,8 @@ code {
 
 .t-pointer{
   cursor: pointer;
+  text-decoration: none;
+  color: var(--dark-primary);
 }
 
 .t-pointer:hover{
